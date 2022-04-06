@@ -2,54 +2,62 @@ from collections import Counter
 
 
 class StringClass:
-    def __init__(self,string):
-        self.string = input("enter the string: ")
+    def __init__(self):
+        self.str1 = input("enter the string: ")
 
     def length(self):
-        return len(self.string)
+        return len(self.str1)
 
-    def listOfCharacters(self,s1):
-        self.s1=s1
-        return list(self.s1)
+    def listOfCharacters(self):
+        return list(self.str1)
 
 
 class PairsPossible(StringClass):
-    def __init__(self,str_pair):
-        self.str_pair = str_pair
+    def __init__(self, str2):
+        super().__init__()
+        self.str2 = str2
 
     def pairsList(self):
-        str_list = list(self.str_pair)
-        pairsList = []
+        str_list = list(self.str2)
+        pairs_list = []
         for i in range(len(str_list)):
             for j in range(len(str_list)):
-                pairsList.append([str_list[i], str_list[j]])
-        return pairsList
+                pairs_list.append([str_list[i], str_list[j]])
+        return pairs_list
 
     def displayPairs(self):
         print("pairs of string:")
-        for pairs in self.pairsList:
+        self.l = self.pairsList()
+        for pairs in self.l:
             print(pairs, end=" ")
 
 
-class SearchCommonElements(PairsPossible):
-    def __init__(self):
-        PairsPossible.__init__()
-        self.arr1 = Counter(list(self.s1))
-        self.arr2 = Counter(list(self.str_pair))
+class SearchCommonElements:
+    def __init__(self,str3,str4):
+        self.str3 = str3
+        self.str4 = str4
 
     def common(self):
-        commonDict = dict(self.arr1.items()&self.arr2.items())
-        res=[]
-        for (key,val) in commonDict.items():
-            for i in range(0, val):
-                res.append(key)
-        return res
+        self.d1 = dict(Counter(list(self.str3)))
+        self.d2 = dict(Counter(list(self.str4)))
+        self.commomDic = dict(self.d1.items()&self.d2.items())
+        res = []
+        for (k,v) in self.commomDic.items():
+            for i in range(0,v):
+                res.append(k)
+        return list(set(res))
 
 
 class EqualSumPairs(SearchCommonElements):
+    def __init__(self,s1,s2):
+        super().__init__(s1,s2)
+        self.lst = self.common()
+        print(self.lst)
 
-    def count(self):
-        l = PairsPossible.pairsList()
+    def display_common(self):
+        print("common in two strings are: ", self.lst)
+
+    def count(self,l):
         res=[]
         for pair in l:
             Sum = 0
@@ -57,27 +65,16 @@ class EqualSumPairs(SearchCommonElements):
                 Sum = Sum + int(pair[j])
             if Sum not in res:
                 res.append(Sum)
-        print("count of total number of pairs which has sum which is not equal to other pairs:",len(res))
-
-    def displaySearchCommon(self):
-        display_list = SearchCommonElements.common()
-        print("result of searchCommonElements class:", display_list)
+        print("count of total number of pairs which has sum which is not equal to other pairs:",len(set(res)))
 
 
-String_obj = StringClass('123')
-length = String_obj.length()
-list_chars = String_obj.listOfCharacters('123')
-print("length of String:",length)
-print("list of characters: ",list_chars)
-
-pair_obj = PairsPossible('234')
-pair_obj.displayPairs()
-
-# common_ele = pair_obj.common()
-# print("commom elements of two strings:", common_ele)
-
-sumPirs_obj = EqualSumPairs('234')
-sumPirs_obj.count()
-sumPirs_obj.displaySearchCommon()
-
-
+s2 = input("enter string2: ")
+pair = PairsPossible(s2)
+s1 = pair.str1
+print("length of string:", pair.length())
+print("string to list: ", pair.listOfCharacters())
+pairlist = pair.pairsList()
+pair.displayPairs()
+ob = EqualSumPairs(s1,s2)
+ob.display_common()
+ob.count(pairlist)
