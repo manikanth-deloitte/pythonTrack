@@ -1,4 +1,6 @@
 from adminClass import adminAction
+from register import userRegister
+from user import userlogin
 
 
 class Welcome:
@@ -27,9 +29,13 @@ def main():
             if user == 'Admin':
                 if admin_dic['pass'] == password:
                     adminAction()
+            else:
+                print("******Welcome to BookMyShow******* ")
+                userlogin(user, password)
+
         elif opt == 2:
             print("****Create new Account***** ")
-
+            userRegister()
         else:
             break
 
