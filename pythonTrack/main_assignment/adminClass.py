@@ -1,3 +1,5 @@
+import openpyxl
+
 from excel import Excel
 import calculateTimings
 
@@ -9,6 +11,12 @@ class Admin(Excel):
     def addMovie(self, lst):
         super().writeExcel(lst)
 
+    def editMovie(self):
+        super().editExcel()
+
+    def deleteMovie(self):
+        super().delExcel()
+
 
 def adminAction():
     while True:
@@ -17,6 +25,8 @@ def adminAction():
         admin.welcomeAdmin()
         opt = int(input("enter option: "))
         if opt == 1:
+            print("Add movie:")
+            print("******Welcome Admin******* ")
             info_new_movie = []
             title = input("enter movie name: ")
             info_new_movie.append(title)
@@ -45,7 +55,13 @@ def adminAction():
             capacity = input("enter the total tickets: ")
             info_new_movie.append(capacity)
             admin.addMovie(info_new_movie)
-        elif opt == 2:pass
-        elif opt == 3:pass
+        elif opt == 2:
+            print("Edit movie:")
+            print("******Welcome Admin******* ")
+            admin.editMovie()
+        elif opt == 3:
+            print("Delete movie:")
+            print("******Welcome Admin******* ")
+            admin.deleteMovie()
         else:
             break
