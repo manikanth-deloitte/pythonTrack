@@ -21,13 +21,15 @@ def main():
         wel.welcome()
         opt = option()
         if opt == 1:
+            print("******Welcome to BookMyShow*******")
             user = input("enter login id: ")
             password = input("enter password:")
             if user == 'Admin':
                 if admin_dic['pass'] == password:
                     adminAction()
         elif opt == 2:
-            pass
+            print("****Create new Account***** ")
+
         else:
             break
 
