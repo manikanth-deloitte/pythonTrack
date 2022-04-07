@@ -20,6 +20,7 @@ class Register:
         for col in range(1,c+1):
             sh2.cell(row,col).value = self.lst_details[col-1]
         wb.save(path)
+        print("user successfully registered")
 
     def checkUser(self,name):
         path = "\\Users\\amanikanth\\PycharmProjects\\pythonTrack\\main_assignment\\excelfiles\\movieDetails.xlsx"
