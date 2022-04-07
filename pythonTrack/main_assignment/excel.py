@@ -25,7 +25,7 @@ class Excel:
         row = 1
         col = 1
         print("movie lists:")
-        for i in range(2, r):
+        for i in range(2, r+1):
             val = sh1.cell(i, 1).value
             print(i, f".{val}")
         edit_movie = input("enter the movie to be edited:")
