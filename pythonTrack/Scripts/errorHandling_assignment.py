@@ -9,12 +9,13 @@ class FormulaError(Exception):
 def error():
     while True:
         exp = input("enter string:")
+        if exp == 'quit': break
         l = exp.split()
-        print(l, l[1])
+        print(l, l[1],type(l[1]))
         try:
             if len(l) != 3:
                 raise FormulaError("given input must contain 3 elements")
-            if l[1] != '+' or l[1] != '-':
+            elif l[1] not in ('+', '-'):
                 raise FormulaError("given input contain + or - symbol")
             else:
                 l[0] = float(l[0])
@@ -26,6 +27,5 @@ def error():
         else:
             res = eval(exp)
             print(res)
-        if exp == 'quit':break
 
 error()
