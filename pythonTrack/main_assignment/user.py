@@ -1,6 +1,14 @@
 import openpyxl
 
 
+class SeatsError(Exception):
+    def __init__(self, data):
+        self.data = data
+
+    def __str__(self):
+        return repr(self.data)
+
+
 class User:
     def __init__(self):
         self.path = "\\Users\\amanikanth\\PycharmProjects\\pythonTrack\\main_assignment\\excelfiles\\movieDetails.xlsx"
@@ -8,19 +16,14 @@ class User:
         self.sh1 = self.wb['Sheet1']
 
     def todoAction(self):
-        print("1.Book Tickets\n2.Cancel Tickets\n3.Give User Rating")
+        print("1.Book Tickets\n2.Cancel Tickets\n3.Give User Rating\n4.logout")
 
-    @staticmethod
-    def moviesList():
-        path = "\\Users\\amanikanth\\PycharmProjects\\pythonTrack\\main_assignment\\excelfiles\\movieDetails.xlsx"
-        wb = openpyxl.load_workbook(path)
-        sh1 = wb['Sheet1']
-        r = sh1.max_row
+    def moviesList(self):
+        r = self.sh1.max_row
         print("movie lists:")
         for i in range(2, r+1):
-            val = sh1.cell(i, 1).value
+            val = self.sh1.cell(i, 1).value
             print(i, f".{val}")
-        print(r+1,".logout")
 
     def movieDetails(self,opt):
         row = opt
@@ -42,15 +45,36 @@ class User:
         return mov_dic
 
     def updateCap(self,val,opt):
-        r=1
         row = opt
         c = self.sh1.max_column
         for col in range(1,c+1):
             if col == 13:
                 self.sh1.cell(row, col).value =val
+                self.wb.save(self.path)
+                break
 
-        self.wb.save(self.path)
+        # self.wb.save(self.path)
         print("up val:", self.sh1.cell(row, 13).value)
+
+    def cancelTic(self,cancel_tic,opt):
+        row = opt
+        c = self.sh1.max_column
+        seats = self.sh1.cell(row, 13).value
+        update = int(seats)+cancel_tic
+        for col in range(1, c + 1):
+            if col == 13:
+                self.sh1.cell(row, col).value = update
+                self.wb.save(self.path)
+                break
+        # self.wb.save(self.path)
+        print("up val:", self.sh1.cell(row, 13).value)
+
+    def addUserRating(self,user_rating,opt):
+        c = self.sh1.max_column
+        self.sh1.cell(1, c+1).value = "User Rating"
+        row = opt
+        self.sh1.cell(row,c+1).value = user_rating
+        self.wb.save(self.path)
 
 
 def userAction(user1):
@@ -59,27 +83,44 @@ def userAction(user1):
     user.moviesList()
     opt1 = int(input('enter movie: '))
     details = user.movieDetails(opt1)
-    user.todoAction()
-    opt = int(input("select above options: "))
-    if opt == 1:
-        print(f"******Welcome {user1} *******")
-        timings = details['Timings']
-        lst = timings.split(',')
-        dic_ti ={}
-        print("movie timings : ")
-        for i in range(len(lst)):
-            print(i+1, ".", lst[i])
-            dic_ti[i+1]=lst[i]
+    while True:
+        user.todoAction()
+        opt = int(input("select above options: "))
+        if opt == 1:
+            print(f"******Welcome {user1} *******")
+            timings = details['Timings']
+            lst = timings.split(',')
+            dic_ti ={}
+            print("movie timings : ")
+            for i in range(len(lst)):
+                print(i+1, ".", lst[i])
+                dic_ti[i+1]=lst[i]
 
-        # select timing
-        sel = int(input("select timing: "))
-        timing = dic_ti[sel]
-        print("Timing:", timing)
-        seats = details['Capacity']
-        print("Remaining Seats:", seats)
-        sel_seats = input("enter the no of seats to be selected:")
-        upt_seats = int(seats)-int(sel_seats)
-        user.updateCap(upt_seats,opt1)
+            # select timing
+            sel = int(input("select timing: "))
+            timing = dic_ti[sel]
+            print("Timing:", timing)
+            seats = details['Capacity']
+            print("Remaining Seats:", seats)
+            sel_seats = int(input("enter the no of seats to be selected:"))
+            try:
+                if sel_seats > int(seats):
+                    raise SeatsError("selected seats should be less than seats available")
+            except SeatsError as e:
+                print(e.data)
+
+            upt_seats = int(seats)-int(sel_seats)
+            user.updateCap(upt_seats,opt1)
+        elif opt == 2:
+            print(f"******Welcome {user1} *******")
+            cancel_tic = int(input("enter number of seats to be canceled: "))
+            user.cancelTic(cancel_tic,opt1)
+        elif opt == 3:
+            print(f"******Welcome {user1} *******")
+            user_rating = input(f"{user1} give rating for movie: ")
+            user.addUserRating(user_rating,opt1)
+        else:
+            break
 
 
 def userlogin(username,password):
